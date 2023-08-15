@@ -87,7 +87,7 @@ impl Kafka {
             .set("bootstrap.servers", &self.brokers)
             .set("session.timeout.ms", "6000")
             .set("enable.auto.commit", "false")
-            .set("group.id", "prorub")
+            .set("group.id", "kladez")
             .create()?;
 
         let topics = topics.iter().map(|t| t.to_string()).collect::<Vec<_>>();

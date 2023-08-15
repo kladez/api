@@ -19,7 +19,7 @@ macro_rules! get_api_service {
             let version = env!("CARGO_PKG_VERSION");
             let license = env!("CARGO_PKG_LICENSE");
             let scheme = if cfg!(debug_assertions) { "http" } else { "https" };
-            OpenApiService::new(handlers, "Prorub API", version)
+            OpenApiService::new(handlers, "Kladez API", version)
                 .license(license)
                 .server(format!("{scheme}://{}", &config.host))
         }

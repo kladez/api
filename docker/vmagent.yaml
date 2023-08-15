@@ -3,7 +3,7 @@
 #   evaluation_interval: 30s
 
 scrape_configs:
-  - job_name: prorub-api
+  - job_name: kladez-api
     honor_labels: true
     static_configs:
       - targets: ['host.docker.internal:8080']

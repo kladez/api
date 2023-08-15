@@ -1,7 +1,7 @@
 cargo-features = ["profile-rustflags"]
 
 [package]
-name = "prorub-api"
+name = "kladez-api"
 version = "0.0.0"
 edition = "2021"
 rust-version = "1.73.0"

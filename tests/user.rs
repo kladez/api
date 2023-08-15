@@ -12,8 +12,8 @@ async fn test() {
 
     tracing_subscriber::fmt::init();
 
-    let config = prorub_api::Config::new();
-    let app = prorub_api::get_app(&config).await;
+    let config = kladez_api::Config::new();
+    let app = kladez_api::get_app(&config).await;
     let cli = TestClient::new(app);
 
     // GET /users

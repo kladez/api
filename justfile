@@ -1,10 +1,10 @@
 # Run local infrastructure
 docker:
-	docker compose -f docker/docker-compose.dev.yaml -p prorub up -d
+	docker compose -f docker/docker-compose.dev.yaml -p kladez up -d
 
 # Stop and remove local infrastructure
 docker-down:
-	docker compose -f docker/docker-compose.dev.yaml -p prorub down
+	docker compose -f docker/docker-compose.dev.yaml -p kladez down
 
 # Add migration
 sqlx-add NAME:
@@ -26,7 +26,7 @@ sqlx-prepare:
 docker-restart:
 	just docker-down
 	just docker
-	while ! docker logs prorub-postgres-1 2>&1 | grep -q "database system is ready to accept connections"; do sleep 1; done
+	while ! docker logs kladez-postgres-1 2>&1 | grep -q "database system is ready to accept connections"; do sleep 1; done
 	just sqlx-run
 
 # Run tests
