@@ -15,8 +15,7 @@ on:
       - 'Cargo.toml'
 
 jobs:
-  build_and_test:
-    name: Build and Test
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -36,7 +35,7 @@ jobs:
         command: build
         args: --all-features
 
-    - name: Run tests
+    - name: Tests
       uses: actions-rs/cargo@v1
       with:
         command: test
