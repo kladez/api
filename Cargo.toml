@@ -4,6 +4,7 @@ cargo-features = ["profile-rustflags"]
 name = "prorub-api"
 version = "0.0.0"
 edition = "2021"
+rust-version = "1.73.0"
 
 [dependencies]
 argon2 = { version = "0.5.1", default-features = false, features = ["alloc"]}
