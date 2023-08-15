@@ -1,4 +1,4 @@
-# Prorub API
+# Kladez API
 
 [![Test Results Badge][tests-badge]][tests-url]
 [![Coverage Badge][coverage-badge]][coverage-url]
