@@ -10,13 +10,17 @@ use poem_openapi::{
 use crate::{
     application::{
         dtos,
-        handlers::auth::{CookieAuth, ApiKeyAuth},
+        handlers::auth::{
+            ApiKeyAuth,
+            CookieAuth,
+        },
         Tags,
     },
     domain::services,
     infrastructure::Infrastructure,
 };
 
+#[derive(Debug)]
 pub struct Api;
 
 #[OpenApi]

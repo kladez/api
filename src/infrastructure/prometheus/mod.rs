@@ -15,6 +15,7 @@ mod metrics;
 
 use metrics::*;
 
+#[derive(Debug)]
 pub struct PrometheusMetrics;
 
 impl<E: Endpoint> Middleware<E> for PrometheusMetrics {
@@ -28,6 +29,7 @@ impl<E: Endpoint> Middleware<E> for PrometheusMetrics {
     }
 }
 
+#[derive(Debug)]
 pub struct PrometheusMetricsImpl<E>(E);
 
 #[async_trait]

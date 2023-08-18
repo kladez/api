@@ -1,3 +1,4 @@
+#![allow(dead_code, unused)]
 #![forbid(unsafe_code)]
 #![warn(missing_debug_implementations)]
 

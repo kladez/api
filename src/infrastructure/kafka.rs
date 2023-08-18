@@ -21,6 +21,7 @@ pub enum Error {
     FuturesChannelCanceled(#[from] futures_channel::oneshot::Canceled),
 }
 
+#[derive(Debug)]
 pub enum Topic {
     UserRegistrations,
 }
@@ -101,6 +102,7 @@ impl Kafka {
     }
 }
 
+#[allow(missing_debug_implementations)]
 pub struct Consumer {
     pub consumer: StreamConsumer,
 }

@@ -15,6 +15,7 @@ use crate::{
 
 pub mod api_key;
 
+#[derive(Debug)]
 pub struct Api;
 
 #[OpenApi]

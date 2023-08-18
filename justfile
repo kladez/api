@@ -33,4 +33,4 @@ docker-restart:
 test:
 	while ! just sqlx-revert | grep -q "No migrations available to revert"; do :; done
 	just sqlx-run
-	cargo t
+	cargo nextest run

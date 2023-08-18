@@ -1,5 +1,6 @@
 use chrono::NaiveDateTime;
 
+#[derive(Debug)]
 pub struct ApiKey {
     pub id: i32,
     pub name: String,

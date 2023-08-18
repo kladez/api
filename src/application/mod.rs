@@ -5,7 +5,7 @@ use crate::Config;
 pub mod dtos;
 pub mod handlers;
 
-#[derive(poem_openapi::Tags)]
+#[derive(Debug, poem_openapi::Tags)]
 pub enum Tags {
     ApiKey,
     Auth,
