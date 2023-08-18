@@ -1,4 +1,4 @@
-# <img alt="Logo" src="https://raw.githubusercontent.com/kladez/assets/main/svg/logo.svg" style="height: 1em; position: relative; top: 0.1em; margin-right: 0.1em"> API
+# Kladez API
 
 [![Uptime Badge][uptime-badge]][uptime-badge]
 \
