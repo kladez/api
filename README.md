@@ -1,19 +1,4 @@
-<style>
-	img[alt=Logo] {
-		height: 1em;
-		position: relative;
-		top: 0.125em;
-		margin-right: 0.125em;
-	}
-
-	@media (prefers-color-scheme: dark) {
-		img[alt=Logo] {
-			filter: invert(1);
-		}
-	}
-</style>
-
-# ![Logo][logo] Kladez API
+# <img alt="Logo" src="https://raw.githubusercontent.com/kladez/assets/main/svg/logo.svg" style="height: 1em; position: relative; top: 0.125em; margin-right: 0.125em"> Kladez API
 
 [![Uptime Badge][uptime-badge]][uptime-badge]
 \
@@ -26,8 +11,6 @@
 
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
-
-[logo]: https://raw.githubusercontent.com/kladez/assets/main/svg/logo.svg
 
 [uptime-badge]: https://img.shields.io/uptimerobot/ratio/m795031693-ba4eb19f16952b0092e4f7e6
 
