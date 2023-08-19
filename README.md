@@ -4,6 +4,7 @@
 \
 [![Test Results Badge][tests-badge]][tests-url]
 [![Coverage Badge][coverage-badge]][coverage-url]
+[![Unsafe Forbidden Badge][unsafe-forbidden-badge]][unsafe-forbidden-url]
 \
 [![License Badge][license-badge]](LICENSE)
 
@@ -19,5 +20,8 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 [coverage-badge]: https://img.shields.io/azure-devops/coverage/kladez/opensource/98/main
 [coverage-url]: https://codecov.io/gh/kladez/api
+
+[unsafe-forbidden-badge]: https://img.shields.io/badge/unsafe-forbidden-success
+[unsafe-forbidden-url]: https://github.com/rust-secure-code/safety-dance
 
 [license-badge]: https://img.shields.io/github/license/kladez/api
