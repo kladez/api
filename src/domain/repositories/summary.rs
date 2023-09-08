@@ -41,7 +41,7 @@ impl Summary {
             }
         };
 
-        let users_count = sqlx::query!("SELECT COUNT(*) as count FROM users")
+        let users_count = sqlx::query!("SELECT COUNT(*) AS count FROM users")
             .fetch_one(&*self.db_pool)
             .await?
             .count

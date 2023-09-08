@@ -4,12 +4,6 @@ updates:
     directory: "/"
     schedule: &schedule
       interval: "weekly"
-    groups: &groups
-      dependencies:
-        dependency-type: "production"
-      dev-dependencies:
-        dependency-type: "development"
   - package-ecosystem: "cargo"
     directory: "/"
     schedule: *schedule
-    groups: *groups

@@ -14,8 +14,8 @@ async fn test() {
 
     tracing_subscriber::fmt::init();
 
-    let config = kladez_api::Config::new();
-    let app = kladez_api::get_app(&config).await;
+    let config = api::Config::new();
+    let app = api::get_app(&config).await;
     let cli = TestClient::new(app);
 
     // GET /users
@@ -52,7 +52,7 @@ async fn test() {
 
     resp.assert_status(StatusCode::BAD_REQUEST);
     resp.assert_json(serde_json::json!({
-        "message": "name is already registered",
+        "message": "Name is already registered",
     }))
     .await;
 

@@ -64,10 +64,10 @@ fn bench_create_user(c: &mut Criterion) {
         })
         .collect::<Vec<_>>();
 
-    let config = kladez_api::Config::new();
+    let config = api::Config::new();
     let app = tokio::runtime::Runtime::new()
         .unwrap()
-        .block_on(kladez_api::get_app(&config));
+        .block_on(api::get_app(&config));
     let cli = TestClient::new(app);
 
     let mut group = c.benchmark_group("create_user");

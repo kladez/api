@@ -44,18 +44,57 @@ pub struct Api;
 impl Api {
     /// Auth
     #[oai(path = "/auth", method = "post", tag = "Tags::Auth")]
-    pub async fn auth(
+    pub async fn create(
         &self,
-        Data(infrastructure): Data<&Infrastructure>,
         Json(payload): Json<dtos::auth::requests::Auth>,
         session: &Session,
+        Data(infrastructure): Data<&Infrastructure>,
     ) -> Result<dtos::auth::responses::Auth, dtos::Error> {
         let service = services::Auth::new(infrastructure);
 
-        let user = service.auth(&payload).await?;
+        let user = service.auth(&payload).await.map_err(|_| {
+            dtos::Error::Unauthorized(Json("Authentication failed".to_string().into()))
+        })?;
 
-        session.set("user_id", user.id);
+        session.set("id", user.id);
 
         Ok(dtos::auth::responses::Auth::Ok)
+    }
+
+    #[oai(path = "/auth/check", method = "get", tag = "Tags::Auth")]
+    pub async fn read(
+        &self,
+        session: &Session,
+        Data(infrastructure): Data<&Infrastructure>,
+    ) -> Result<Json<dtos::auth::responses::Check>, dtos::Error> {
+        let id = session
+            .get::<i32>("id")
+            .ok_or(dtos::Error::Unauthorized(Json(
+                "unauthorized".to_string().into(),
+            )))?;
+
+        let service = services::User::new(infrastructure);
+
+        let user = service.get(&id).await?;
+
+        Ok(Json(dtos::auth::responses::Check {
+            name: user.name,
+        }))
+    }
+
+    #[oai(path = "/auth", method = "delete", tag = "Tags::Auth")]
+    pub async fn delete(
+        &self,
+        session: &Session,
+    ) -> Result<(), dtos::Error> {
+        let id = session
+            .get::<i32>("id")
+            .ok_or(dtos::Error::Unauthorized(Json(
+                "unauthorized".to_string().into(),
+            )))?;
+
+        session.purge();
+
+        Ok(())
     }
 }

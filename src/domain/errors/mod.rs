@@ -15,10 +15,10 @@ impl From<sqlx::Error> for dtos::Error {
                 if message.ends_with(
                     ": duplicate key value violates unique constraint \"users_name_key\"",
                 ) {
-                    Self::BadRequest(Json("name is already registered".to_string().into()))
-                } else if message
-                    .ends_with("duplicate key value violates unique constraint \"users_email_key\"")
-                {
+                    Self::BadRequest(Json("Name is already registered".to_string().into()))
+                } else if message.ends_with(
+                    ": duplicate key value violates unique constraint \"users_email_key\"",
+                ) {
                     Self::BadRequest(Json("email is already registered".to_string().into()))
                 } else {
                     Self::BadRequest(Json(message.into()))

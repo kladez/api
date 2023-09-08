@@ -36,14 +36,14 @@ impl Api {
         // _api_key_auth: ApiKeyAuth,
         _cookie_auth: CookieAuth,
     ) -> Result<dtos::user::api_key::responses::Create, dtos::Error> {
-        let user_id = session
-            .get::<i32>("user_id")
+        let name = session
+            .get::<i32>("name")
             .ok_or(dtos::Error::Unauthorized(Json(
                 "unauthorized".to_string().into(),
             )))?;
 
         let service = services::user::ApiKey::new(infrastructure);
-        service.create(&payload, &user_id).await.map(|api_key| {
+        service.create(&payload, &name).await.map(|api_key| {
             dtos::user::api_key::responses::Create::Ok(Json(
                 dtos::user::api_key::responses::ApiKey { api_key },
             ))
