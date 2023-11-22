@@ -1,5 +1,9 @@
 {
-  "cSpell.words": [
-    "kladez",
-  ],
+  "editor.rulers": [120],
+  "redhat.telemetry.enabled": false,
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer",
+  },
+  "rust-analyzer.check.command": "clippy",
+  "rust-analyzer.rustfmt.overrideCommand": ["rustup", "run", "nightly", "rustfmt"],
 }

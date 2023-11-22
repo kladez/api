@@ -1,14 +1,17 @@
-use sqlx::{
-    postgres::PgPoolOptions,
-    PgPool,
-};
+use crate::application::config::Config;
 
-use crate::Config;
+pub type Pool = sqlx::PgPool;
 
-pub async fn new_db_pool(config: &Config) -> PgPool {
-    PgPoolOptions::new()
-        .max_connections(config.db_max_connections)
-        .connect(&config.db_url)
+pub async fn get_pool(config: &Config) -> Pool {
+    sqlx::postgres::PgPoolOptions::new()
+        // The default connection limit for a Postgres server is 100 connections, minus 3 for superusers.
+        // Since we're using the default superuser we don't have to worry about this too much,
+        // although we should leave some connections available for manual access.
+        //
+        // If you're deploying your application with multiple replicas, then the total
+        // across all replicas should not exceed the Postgres connection limit.
+        .max_connections(50)
+        .connect(&config.database_url)
         .await
-        .unwrap()
+        .expect("Failed to connect to database")
 }
