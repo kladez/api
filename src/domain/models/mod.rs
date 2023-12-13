@@ -1,5 +1,3 @@
-mod user;
-mod api_key;
+pub mod user;
 
 pub use user::User;
-pub use api_key::ApiKey;

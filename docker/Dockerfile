@@ -1,17 +1,39 @@
-FROM messense/rust-musl-cross:x86_64-musl AS chef
-ENV SQLX_OFFLINE=true
-RUN cargo install cargo-chef
-WORKDIR /app
+ARG APP_NAME=kladez-api
+ARG RUST_VERSION=1.73.0
 
-FROM chef AS planner
-COPY . .
-RUN cargo chef prepare --recipe-path recipe.json
+# Build stage
+FROM rust:${RUST_VERSION}-alpine3.18 AS builder
 
-FROM chef AS builder
-COPY --from=planner /app/recipe.json recipe.json
-RUN cargo chef cook --release --target x86_64-unknown-linux-musl --recipe-path recipe.json
-COPY . .
-RUN cargo build --release --target x86_64-unknown-linux-musl
+ARG APP_NAME
 
-FROM scratch
-COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/kladez .
+RUN apk add --no-cache musl-dev \
+    && USER=root cargo new --bin ${APP_NAME}
+WORKDIR /${APP_NAME}
+
+# Cache dependencies
+COPY Cargo.toml Cargo.lock ./
+RUN echo "fn main() {}" > src/main.rs \
+    && cargo build --release
+
+# Build
+COPY .sqlx ./.sqlx
+COPY src ./src
+RUN cargo build --release
+
+# Final stage
+FROM gcr.io/distroless/cc
+
+ARG APP_NAME
+
+ENV BIND_HOST=0.0.0.0
+ENV BIND_PORT=80
+
+USER nonroot:nonroot
+
+COPY --from=builder /${APP_NAME}/target/release/${APP_NAME} /usr/local/bin/app
+
+EXPOSE ${BIND_PORT}
+
+HEALTHCHECK CMD wget -q --method=HEAD 127.0.0.1/health-check || exit 1
+
+ENTRYPOINT ["/usr/local/bin/app"]

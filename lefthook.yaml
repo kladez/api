@@ -1,0 +1,18 @@
+skip_output:
+  - meta
+  - summary
+  - success
+  - execution
+
+commit-msg:
+  commands:
+    commitlint:
+      run: just commitlint \"$1\"
+
+pre-commit:
+  parallel: true
+  commands:
+    check:
+      run: just check
+    format:
+      run: just format --check

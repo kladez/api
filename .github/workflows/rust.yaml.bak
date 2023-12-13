@@ -1,0 +1,99 @@
+# Check https://github.com/actions/runner/issues/1182 to check if YAML anchors is supported by GitHub Actions finally.
+
+name: Rust workflow
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  clippy:
+    permissions:
+      contents: read
+      pull-requests: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        components: clippy
+
+    - uses: reviewdog/action-setup@v1
+
+    - uses: kladez/rust-actions/actions/clippy@main
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_pr_number: ${{ github.event.number }}
+        reviewdog_reporter: 'github-pr-review'
+
+  audit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+
+    - uses: actions-rs/audit-check@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        ignore: RUSTSEC-2023-0071 # https://github.com/rust-lang/cargo/issues/10801#issuecomment-1831905921
+
+  rustfmt:
+    permissions:
+      contents: read
+      pull-requests: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: nightly
+        components: rustfmt
+
+    - uses: reviewdog/action-setup@v1
+
+    - uses: kladez/rust-actions/actions/rustfmt@main
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_pr_number: ${{ github.event.number }}
+        reviewdog_reporter: 'github-pr-review'

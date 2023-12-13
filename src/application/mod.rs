@@ -1,33 +1,55 @@
-use poem_openapi::OpenApiService;
+use axum::{
+    http::StatusCode,
+    BoxError,
+};
+use tokio::net::TcpListener;
+use tower_sessions::Expiry;
 
-use crate::Config;
+use crate::{
+    infrastructure,
+    presentation::handlers,
+};
 
-pub mod dtos;
-pub mod handlers;
+pub mod config;
 
-#[derive(Debug, poem_openapi::Tags)]
-pub enum Tags {
-    ApiKey,
-    Auth,
-    User,
+pub type Session = infrastructure::session_store::Session;
+
+pub async fn run(
+    config: &config::Config,
+    tracing_layer: infrastructure::tracing::Layer,
+    session_store_layer_params: infrastructure::session_store::LayerParams,
+    database_pool: infrastructure::database::Pool,
+) {
+    let session_store_layer = infrastructure::session_store::get_layer(
+        session_store_layer_params,
+        |error: BoxError| async move {
+            tracing::error!(error = %error, "Error handling request");
+            // (
+            //     StatusCode::BAD_REQUEST,
+            //     axum::Json(
+            //         &serde_json::json!({
+            //             "error": error.to_string(),
+            //         }),
+            //     ),
+            // )
+            StatusCode::BAD_REQUEST
+        },
+        |session_manager_layer| {
+            session_manager_layer
+                .with_name("session")
+                .with_secure(false)
+                .with_expiry(Expiry::OnInactivity(time::Duration::seconds(60)))
+        },
+    );
+
+    let app = axum::Router::new()
+        .nest("/", handlers::get_router())
+        .layer(tracing_layer)
+        .layer(session_store_layer)
+        .with_state(database_pool);
+
+    tracing::info!(address = %config.bind_address, "Starting server");
+
+    let listener = TcpListener::bind(&config.bind_address).await.unwrap();
+    axum::serve(listener, app.into_make_service()).await.unwrap();
 }
-
-macro_rules! get_api_service {
-    ($($path:path),* $(,)?) => {
-        pub fn get_api_service(config: &Config) -> OpenApiService<($($path,)*), ()> {
-            let handlers = ($($path,)*);
-            let version = env!("CARGO_PKG_VERSION");
-            let license = env!("CARGO_PKG_LICENSE");
-            let scheme = if cfg!(debug_assertions) { "http" } else { "https" };
-            OpenApiService::new(handlers, "Kladez API", version)
-                .license(license)
-                .server(format!("{scheme}://{}", &config.host))
-        }
-    };
-}
-
-get_api_service!(
-    handlers::user::Api,
-    handlers::user::api_key::Api,
-    handlers::auth::Api,
-);
